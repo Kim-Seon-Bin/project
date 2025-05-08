@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>로그인</title>
+</head>
+<body>
+  <h1>로그인</h1>
+  <input type="text" id="userId" placeholder="ID" />
+  <input type="password" id="userPw" placeholder="Password" />
+  <button onclick="login()">로그인</button>
+
+  <script>
+    function login() {
+      const data = {
+        userId: document.getElementById('userId').value,
+        userPw: document.getElementById('userPw').value
+      };
+
+      fetch('/api/user/login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+      })
+      .then(res => res.text())
+      .then(msg => alert(msg));
+    }
+  </script>
+</body>
+</html>
