@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>프리랜서 & 클라이언트 목록</title>
+  <title>메인페이지</title>
   <style>
     .container {
       display: flex;
@@ -15,10 +15,17 @@
       flex: 1;
     }
 
-    .freelancer-card, .project-card {
+    .freelancer-card {
       border: 1px solid #ccc;
       padding: 20px;
       margin-bottom: 20px;
+    }
+
+    .project-card {
+      border: 1px solid #ccc;
+      padding: 20px;
+      margin-bottom: 20px;
+      cursor: pointer;
     }
 
     h2 {
@@ -31,11 +38,13 @@
   <div class="container">
     <div class="section">
       <h2>프리랜서 목록</h2>
+      <button onclick="location.href='freelancer-form.html'">프리랜서 등록</button>
       <div id="freelancer-list"></div>
     </div>
 
     <div class="section">
       <h2>프로젝트 목록</h2>
+      <button onclick="location.href='project-form.html'">프로젝트 등록</button>
       <div id="project-list"></div>
       </div>
   </div>

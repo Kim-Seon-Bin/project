@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sun.sunproject.dto.ProjectDetailDto;
@@ -25,5 +27,10 @@ public class ProjectController {
     @GetMapping("/api/projects/{id}")
     public ProjectDetailDto getProjectDetail(@PathVariable Long id) {
         return projectService.getProjectDetail(id);
+    }
+
+    @PostMapping("/api/projects")
+    public void registerProject(@RequestBody ProjectDetailDto dto) {
+        projectService.registerProject(dto);
     }
 }

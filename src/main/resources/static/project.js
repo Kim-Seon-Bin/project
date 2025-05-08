@@ -28,6 +28,7 @@ fetch('/api/projects')
               <p><strong>정보:</strong> ${detail.projectInfo}</p>
               <p><strong>예산:</strong> ${detail.projectBudget}</p>
               <p><strong>기간:</strong> ${detail.projectPeriod}</p>
+              <p><strong>필요 스킬:</strong> ${detail.requiredSkills.join(', ')}</p>
             `;
             document.getElementById('project-modal').style.display = 'block';
           });

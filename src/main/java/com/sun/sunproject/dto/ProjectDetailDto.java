@@ -1,5 +1,7 @@
 package com.sun.sunproject.dto;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -13,4 +15,5 @@ public class ProjectDetailDto {
     private String projectInfo;
     private String projectBudget;
     private String projectPeriod;
+    private List<String> requiredSkills;
 }

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>프리랜서 등록</title>
+</head>
+<body>
+  <h2>프리랜서 등록</h2>
+  <form id="freelancerForm">
+    <label>이름: <input type="text" name="name" required></label><br>
+    <label>소개: <textarea name="intro"></textarea></label><br>
+    <label>포트폴리오 링크: <input type="text" name="portfolio"></label><br>
+    <label>보유 스킬 (쉼표로 구분): <input type="text" name="skills"></label><br>
+    <button type="submit">등록</button>
+  </form>
+
+  <script>
+    document.getElementById('freelancerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const form = e.target;
+      const data = {
+        freelancerName: form.name.value,
+        freelancerIntro: form.intro.value,
+        freelancerPortfolio: form.portfolio.value,
+        freelancerSkills: form.skills.value.split(',').map(skill => skill.trim())
+      };
+
+      fetch('/api/freelancers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      }).then(res => {
+        if (res.ok) {
+          window.location.href = 'main.html';
+        } else {
+          alert('등록 실패');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

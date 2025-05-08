@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>프로젝트 등록</title>
+</head>
+<body>
+  <h2>프로젝트 등록</h2>
+  <form id="projectForm">
+    <label>클라이언트 이름: <input type="text" name="clientName"></label><br>
+    <label>주소: <input type="text" name="clientAddress"></label><br>
+    <label>전화번호: <input type="text" name="clientPhone"></label><br>
+    <label>프로젝트명: <input type="text" name="title" required></label><br>
+    <label>정보: <textarea name="info"></textarea></label><br>
+    <label>예산: <input type="text" name="budget"></label><br>
+    <label>기간: <input type="text" name="period"></label><br>
+    <label>필요 스킬 (쉼표로 구분): <input type="text" name="skills"></label><br>
+    <button type="submit">등록</button>
+  </form>
+  
+  <script>
+  document.getElementById('projectForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+  
+    const form = e.target;
+    const data = {
+      clientName: form.clientName.value,
+      clientAddress: form.clientAddress.value,
+      clientPhone: form.clientPhone.value,
+      projectTitle: form.title.value,
+      projectInfo: form.info.value,
+      projectBudget: form.budget.value,
+      projectPeriod: form.period.value,
+      requiredSkills: form.skills.value.split(',').map(skill => skill.trim())
+    };
+  
+    fetch('/api/projects', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(res => {
+      if (res.ok) {
+        window.location.href = 'main.html';
+      } else {
+        alert('등록 실패');
+      }
+    });
+  });
+  </script>
+  
+</body>
+</html>
