@@ -15,12 +15,6 @@
       flex: 1;
     }
 
-    .freelancer-card {
-      border: 1px solid #ccc;
-      padding: 20px;
-      margin-bottom: 20px;
-    }
-
     .project-card {
       border: 1px solid #ccc;
       padding: 20px;
@@ -28,40 +22,16 @@
       cursor: pointer;
     }
 
+    .freelancer-card {
+      border: 1px solid #ccc;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
     h2 {
       margin: 0 0 5px;
     }
-  </style>
-</head>
-<body>
 
-  <div class="container">
-    <div class="section">
-      <h2>프리랜서 목록</h2>
-      <button onclick="location.href='freelancer-form.html'">프리랜서 등록</button>
-      <div id="freelancer-list"></div>
-    </div>
-
-    <div class="section">
-      <h2>프로젝트 목록</h2>
-      <button onclick="location.href='project-form.html'">프로젝트 등록</button>
-      <div id="project-list"></div>
-      </div>
-  </div>
-
-  <script src="freelancer.js"></script>
-  <script src="project.js"></script>
-
-  <!-- 프로젝트 상세 모달 -->
-  <div id="project-modal" class="modal">
-    <div class="modal-content">
-      <span class="close-button">&times;</span>
-      <div id="project-detail-content"></div>
-    </div>
-  </div>
-
-  <style>
-    /* 모달 스타일 */
     .modal {
       display: none;
       position: fixed;
@@ -83,6 +53,25 @@
       border-radius: 8px;
     }
 
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+
+    #apply-button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #apply-button:hover {
+      background-color: #45a049;
+    }
+
     .close-button {
       float: right;
       font-size: 28px;
@@ -90,15 +79,110 @@
       cursor: pointer;
     }
   </style>
+</head>
+<body>
+
+  <h1>메인 페이지</h1>
+  <p id="user-type-label"></p>
+  <p id="login-required-message" style="display: none;">로그인이 필요합니다.</p>
+
+  <button onclick="logout()">로그아웃</button>
+
+  <div class="container">
+    <div class="section">
+      <h2>프리랜서 목록</h2>
+      <button onclick="goFreelancerForm()">프리랜서 등록</button>
+      <div id="freelancer-list"></div>
+    </div>
+
+    <div class="section">
+      <h2>프로젝트 목록</h2>
+      <button onclick="goProjectForm()">프로젝트 등록</button>
+      <div id="project-list"></div>
+    </div>
+  </div>
+
+  <!-- 프로젝트 상세 모달 -->
+  <div id="project-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-button">&times;</span>
+      <div id="project-detail-content"></div>
+      <div class="modal-footer">
+        <button id="apply-button">지원하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 스크립트 -->
 
   <script>
+    let currentUserType = null;
+
+    // 사용자 유형 표시
+    fetch('/api/user/info', {
+      method: 'GET',
+      credentials: 'same-origin'
+    })
+    .then(res => res.json())
+    .then(data => {
+      currentUserType = data.userType;
+      let label = '';
+
+      if (!currentUserType) {
+        label = '로그인 해주세요';
+      } else if (currentUserType === '프리랜서') {
+        label = '프리랜서';
+      } else if (currentUserType === '클라이언트') {
+        label = '클라이언트';
+      } else {
+        label = '알 수 없는 사용자 유형';
+      }
+
+      document.getElementById('user-type-label').textContent = `현재 사용자 유형: ${label}`;
+    })
+    .catch(err => {
+      console.error(err);
+      document.getElementById('user-type-label').textContent = '로그인 해주세요';
+    });
+
+    // 로그아웃 처리 함수
+    function logout() {
+      fetch('/api/user/logout', {
+        method: 'POST',
+        credentials: 'same-origin'
+      })
+      .then(res => res.text())
+      .then(msg => {
+        alert(msg);
+        location.href = "login.html";
+      })
+      .catch(err => console.error(err));
+    }
+
+    // 프리랜서 등록 페이지 이동
+    function goFreelancerForm() {
+      if (currentUserType === '프리랜서') {
+        location.href = 'freelancer-form.html';
+      } else {
+        alert('프리랜서만 이용 가능합니다.');
+      }
+    }
+
+    // 프로젝트 등록 페이지 이동
+    function goProjectForm() {
+      if (currentUserType === '클라이언트') {
+        location.href = 'project-form.html';
+      } else {
+        alert('클라이언트만 이용 가능합니다.');
+      }
+    }
+
+    // 모달 닫기
     document.addEventListener('DOMContentLoaded', () => {
-      // X 버튼 클릭 시 모달 닫기
       document.querySelector('.close-button').addEventListener('click', () => {
         document.getElementById('project-modal').style.display = 'none';
       });
 
-      // 모달 바깥 영역 클릭 시 닫기
       window.addEventListener('click', (event) => {
         const modal = document.getElementById('project-modal');
         if (event.target === modal) {
@@ -107,6 +191,9 @@
       });
     });
   </script>
+
+  <script src="freelancer.js"></script>
+  <script src="project.js"></script>
 
 </body>
 </html>

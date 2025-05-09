@@ -21,4 +21,9 @@ public class UserService {
         UserEntity user = userRepository.findByUserId(userId);
         return user != null && user.getUserPw().equals(userPw);
     }
+
+    // userId로 사용자 정보 조회
+    public UserEntity findByUserId(String userId) {
+        return userRepository.findByUserId(userId);
+    }
 }

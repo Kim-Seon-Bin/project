@@ -3,22 +3,77 @@
 <head>
   <meta charset="UTF-8">
   <title>회원가입</title>
+  <style>
+    .type-button {
+      padding: 10px 20px;
+      margin: 5px;
+      border: 1px solid #ccc;
+      background-color: #f5f5f5;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .type-button.selected {
+      background-color: #4CAF50;
+      color: white;
+      border-color: #4CAF50;
+    }
+  </style>
 </head>
 <body>
   <h1>회원가입</h1>
   <input type="text" id="userId" placeholder="ID" />
   <input type="password" id="userPw" placeholder="Password" />
   <input type="email" id="userEmail" placeholder="Email" />
-  <input type="text" id="userType" placeholder="User Type" />
+
+  <div>
+    <button id="freelancerBtn" class="type-button" onclick="selectType('FREELANCER')">프리랜서</button>
+    <button id="clientBtn" class="type-button" onclick="selectType('CLIENT')">클라이언트</button>
+  </div>
+  
+  <input type="hidden" id="userType" />
+
   <button onclick="join()">회원가입</button>
 
   <script>
+    function selectType(type) {
+      if (type === 'FREELANCER') {
+        document.getElementById('userType').value = '프리랜서';
+      } else if (type === 'CLIENT') {
+        document.getElementById('userType').value = '클라이언트';
+      }
+
+      document.getElementById('freelancerBtn').classList.remove('selected');
+      document.getElementById('clientBtn').classList.remove('selected');
+
+      if (type === 'FREELANCER') {
+        document.getElementById('freelancerBtn').classList.add('selected');
+      } else if (type === 'CLIENT') {
+        document.getElementById('clientBtn').classList.add('selected');
+      }
+    }
+
     function join() {
+      const userId = document.getElementById('userId').value.trim();
+      const userPw = document.getElementById('userPw').value.trim();
+      const userEmail = document.getElementById('userEmail').value.trim();
+      const userType = document.getElementById('userType').value;
+
+      if (!userId || !userPw || !userEmail || !userType) {
+        alert('모든 정보를 입력해주세요.');
+        return;
+      }
+
+      if (!userEmail.includes('@')) {
+        alert('이메일에 @가 포함되어야 합니다.');
+        return;
+      }
+
       const data = {
-        userId: document.getElementById('userId').value,
-        userPw: document.getElementById('userPw').value,
-        userEmail: document.getElementById('userEmail').value,
-        userType: document.getElementById('userType').value
+        userId,
+        userPw,
+        userEmail,
+        userType
       };
 
       fetch('/api/user/join', {
@@ -27,7 +82,10 @@
         body: JSON.stringify(data)
       })
       .then(res => res.text())
-      .then(msg => alert(msg));
+      .then(msg => {
+        alert(msg);
+        location.href = 'login.html';
+      });
     }
   </script>
 </body>

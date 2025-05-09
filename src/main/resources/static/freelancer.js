@@ -9,7 +9,7 @@ fetch('/api/freelancers')
         <h2>${freelancer.freelancerName}</h2>
         <p>${freelancer.freelancerIntro}</p>
         <p><strong>포트폴리오:</strong> ${freelancer.freelancerPortfolio}</a></p>
-        <div><strong>보유 스킬:</strong> ${freelancer.freelancerSkills.join(' ')}</div>
+        <div><strong>보유 스킬:</strong> ${freelancer.freelancerSkills.join(', ')}</div>
       `;
       list.appendChild(card);
     });

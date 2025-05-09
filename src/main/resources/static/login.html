@@ -9,21 +9,62 @@
   <input type="text" id="userId" placeholder="ID" />
   <input type="password" id="userPw" placeholder="Password" />
   <button onclick="login()">로그인</button>
+  <button onclick="location.href='join.html'">회원가입</button>
 
   <script>
+    // 로그인 상태 확인
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        fetch('/api/user/checkLogin', {
+          method: 'GET',
+          credentials: 'same-origin'
+        })
+        .then(res => res.json())
+        .then(isLoggedIn => {
+          if (isLoggedIn) {
+            alert("이미 로그인되어 있습니다.");
+            setTimeout(() => {
+              location.href = "main.html";
+            }, 500);
+          }
+        })
+        .catch(err => console.error(err));
+      }, 200);
+    });
+
+    // 로그인 처리
     function login() {
+      const userId = document.getElementById('userId').value.trim();
+      const userPw = document.getElementById('userPw').value.trim();
+
+      if (!userId || !userPw) {
+        alert("ID와 비밀번호를 모두 입력해주세요.");
+        return;
+      }
+
       const data = {
-        userId: document.getElementById('userId').value,
-        userPw: document.getElementById('userPw').value
+        userId,
+        userPw
       };
 
       fetch('/api/user/login', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data)
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+        credentials: 'same-origin' 
       })
       .then(res => res.text())
-      .then(msg => alert(msg));
+      .then(success => {
+        if (success) {
+          location.href = "main.html";
+        } else {
+          alert("아이디 또는 비밀번호가 틀렸습니다.");
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert("로그인 중 오류가 발생했습니다.");
+      });
     }
   </script>
 </body>
