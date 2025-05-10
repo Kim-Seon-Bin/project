@@ -51,12 +51,12 @@
 ## ⚙ 시스템 아키텍처(구조) 예시 
 
 ## 📌 SW유스케이스
-![image](https://github.com/user-attachments/assets/27ed369c-1f33-4838-b047-105f6e848ba2)
+![image](https://github.com/user-attachments/assets/1c71d9de-7a33-4c08-af28-6e37463c4acd)
 
 ## 📌 서비스 흐름도
 
 ## 📌 ER다이어그램
-![image](https://github.com/user-attachments/assets/b9566f4f-040b-4d53-befb-2d1d4fab832e)
+![image](https://github.com/user-attachments/assets/af7faa24-bcf9-449b-86d7-c4734e08fbf3)
 
 ## 🖥 화면 구성
 ### 메인화면
