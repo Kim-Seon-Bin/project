@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sun.sunproject.dto.FreelancerDto;
+import com.sun.sunproject.entity.UserEntity;
 import com.sun.sunproject.service.FreelancerService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -24,8 +26,21 @@ public class FreelancerController {
     }
 
     @PostMapping("/api/freelancers")
-    public ResponseEntity<Void> createFreelancer(@RequestBody FreelancerDto dto) {
-        freelancerService.createFreelancer(dto);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> createFreelancer(@RequestBody FreelancerDto dto, HttpSession session) {
+        UserEntity user = (UserEntity) session.getAttribute("user");
+        if (user == null) {
+            return ResponseEntity.status(401).body("로그인이 필요합니다.");
+        }
+
+        System.out.println("프리랜서 등록 요청 - 사용자 ID: " + user.getUserId());
+        System.out.println("DTO 내용: " + dto);
+
+        try {
+            freelancerService.createFreelancer(dto, user);
+            return ResponseEntity.ok("프리랜서 등록 성공");
+        } catch (Exception e) {
+            e.printStackTrace(); // 콘솔 로그 확인 필수
+            return ResponseEntity.status(500).body("서버 오류 발생: " + e.getMessage());
+        }
     }
 }

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>마이페이지</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background-color: #f9f9f9;
+    }
+
+    .mypage-container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 30px;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .mypage-container h2 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .info-group {
+      margin-bottom: 20px;
+    }
+
+    .info-label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      display: block;
+      color: #333;
+    }
+
+    .info-value {
+      background-color: #f1f1f1;
+      padding: 10px 15px;
+      border-radius: 5px;
+      color: #555;
+    }
+
+    #back-to-main-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      padding: 12px 20px;
+      color: black;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      cursor: pointer;
+      z-index: 1000;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="mypage-container">
+    <h2>마이페이지</h2>
+    <button onclick="goToMain()" id="back-to-main-btn">메인 화면으로 돌아가기</button>
+
+    <div class="info-group">
+      <span class="info-label">아이디</span>
+      <div class="info-value" id="user-id"></div>
+    </div>
+
+    <div class="info-group">
+      <span class="info-label">이메일</span>
+      <div class="info-value" id="user-email"></div>
+    </div>
+
+    <div class="info-group">
+      <span class="info-label">유저 유형</span>
+      <div class="info-value" id="user-type"></div>
+    </div>
+
+  </div>
+
+  <script>
+    // 로그인한 사용자 정보 불러오기
+    fetch('/api/user/info', {
+      method: 'GET',
+      credentials: 'same-origin'
+    })
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('user-id').textContent = data.userId || '';
+      document.getElementById('user-email').textContent = data.userEmail || '';
+      document.getElementById('user-type').textContent = data.userType || '';
+
+      const container = document.querySelector('.mypage-container');
+
+      const sectionTitle = document.createElement('h3');
+      sectionTitle.style.marginTop = '30px';
+
+      const sectionBox = document.createElement('div');
+      sectionBox.style.padding = '15px';
+      sectionBox.style.border = '1px solid #ccc';
+      sectionBox.style.borderRadius = '8px';
+      sectionBox.style.backgroundColor = '#f4f4f4';
+      sectionBox.style.marginTop = '10px';
+
+      if (data.userType === '프리랜서') {
+        sectionTitle.textContent = '프로젝트 지원 현황';
+        sectionBox.textContent = '지원한 프로젝트 목록이 여기에 표시됩니다.';
+      } else if (data.userType === '클라이언트') {
+        sectionTitle.textContent = '프로젝트 등록 현황';
+        sectionBox.textContent = '등록한 프로젝트 목록이 여기에 표시됩니다.';
+      }
+
+      container.appendChild(sectionTitle);
+      container.appendChild(sectionBox);
+    })
+    .catch(err => {
+      console.error('사용자 정보 불러오기 실패:', err);
+      alert('로그인이 필요합니다.');
+      location.href = 'login.html';
+    });
+
+    function goToMain() {
+      window.location.href = 'main.html';
+    }
+  </script>
+
+</body>
+</html>

@@ -66,12 +66,14 @@ public class UserController {
             // 로그인 안 된 경우에도 userType: null 리턴
             return ResponseEntity.ok(Map.of(
                 "userId", null,
+                "userEmail", null,
                 "userType", null
             ));
         }
 
         return ResponseEntity.ok(Map.of(
             "userId", user.getUserId(),
+            "userEmail", user.getUserEmail(),
             "userType", user.getUserType()
         ));
     }

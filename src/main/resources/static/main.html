@@ -61,15 +61,10 @@
 
     #apply-button {
       padding: 10px 20px;
-      background-color: #4CAF50;
-      color: white;
+      color: black;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-    }
-
-    #apply-button:hover {
-      background-color: #45a049;
     }
 
     .close-button {
@@ -86,7 +81,10 @@
   <p id="user-type-label"></p>
   <p id="login-required-message" style="display: none;">로그인이 필요합니다.</p>
 
-  <button onclick="logout()">로그아웃</button>
+  <button id="login-button" onclick="location.href='login.html'" style="display: none;">로그인</button>
+  <button id="mypage-button" onclick="location.href='mypage.html'" style="display: none;">마이페이지</button>
+  <button id="logout-button" onclick="logout()" style="display: none;">로그아웃</button>
+
 
   <div class="container">
     <div class="section">
@@ -113,10 +111,22 @@
     </div>
   </div>
 
+  <!-- 지원 확인 모달 -->
+  <div id="apply-confirm-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-button" onclick="closeApplyConfirmModal()">&times;</span>
+      <div id="apply-confirm-message"></div>
+      <div class="modal-footer">
+        <button onclick="confirmApply()">확인</button>
+      </div>
+    </div>
+  </div>
+
   <!-- 스크립트 -->
 
   <script>
     let currentUserType = null;
+    let selectedProjectTitle = '';
 
     // 사용자 유형 표시
     fetch('/api/user/info', {
@@ -128,14 +138,26 @@
       currentUserType = data.userType;
       let label = '';
 
+      const loginBtn = document.getElementById('login-button');
+      const logoutBtn = document.getElementById('logout-button');
+      const mypageBtn = document.getElementById('mypage-button');
+
       if (!currentUserType) {
         label = '로그인 해주세요';
-      } else if (currentUserType === '프리랜서') {
-        label = '프리랜서';
-      } else if (currentUserType === '클라이언트') {
-        label = '클라이언트';
+        loginBtn.style.display = 'inline-block';
+        logoutBtn.style.display = 'none';
+        mypageBtn.style.display = 'none';
       } else {
-        label = '알 수 없는 사용자 유형';
+        if (currentUserType === '프리랜서') {
+          label = '프리랜서';
+        } else if (currentUserType === '클라이언트') {
+          label = '클라이언트';
+        } else {
+          label = '알 수 없는 사용자 유형';
+        }
+        loginBtn.style.display = 'none';
+        logoutBtn.style.display = 'inline-block';
+        mypageBtn.style.display = 'inline-block';
       }
 
       document.getElementById('user-type-label').textContent = `현재 사용자 유형: ${label}`;
@@ -143,6 +165,8 @@
     .catch(err => {
       console.error(err);
       document.getElementById('user-type-label').textContent = '로그인 해주세요';
+      document.getElementById('login-button').style.display = 'inline-block';
+      document.getElementById('logout-button').style.display = 'none';
     });
 
     // 로그아웃 처리 함수
@@ -190,6 +214,35 @@
         }
       });
     });
+
+    // 지원하기 버튼 클릭 시 실행
+    document.addEventListener('DOMContentLoaded', () => {
+      const applyBtn = document.getElementById('apply-button');
+      applyBtn.addEventListener('click', () => {
+        if (currentUserType !== '프리랜서') {
+          alert('프리랜서만 이용 가능합니다.');
+          return;
+        }
+        
+        const titleElement = document.querySelector('#project-detail-content p:nth-child(5)');
+        if (titleElement) {
+          selectedProjectTitle = titleElement.textContent.replace('프로젝트명:', '').trim();
+          document.getElementById('apply-confirm-message').textContent = 
+            `"${selectedProjectTitle}" 프로젝트에 지원하시겠습니까?`;
+          document.getElementById('apply-confirm-modal').style.display = 'block';
+        }
+      });
+    });
+
+    function closeApplyConfirmModal() {
+      document.getElementById('apply-confirm-modal').style.display = 'none';
+    }
+
+    function confirmApply() {
+      alert(`"${selectedProjectTitle}" 프로젝트에 지원 완료되었습니다.`);
+      closeApplyConfirmModal();
+      document.getElementById('project-modal').style.display = 'none';
+    }
   </script>
 
   <script src="freelancer.js"></script>
