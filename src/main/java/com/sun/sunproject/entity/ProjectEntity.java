@@ -1,5 +1,6 @@
 package com.sun.sunproject.entity;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -37,6 +38,9 @@ public class ProjectEntity {
 
     @Column(name="PROJECT_PERIOD")
     private String projectPeriod;
+
+    @Column(name="PROJECT_REGISTRATION_TIME")
+    private LocalDateTime time;
 
     @OneToMany(mappedBy="project", fetch=FetchType.LAZY)
     private List<ProjectSkillEntity> projectSkills;

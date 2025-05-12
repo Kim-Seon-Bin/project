@@ -36,7 +36,8 @@ public class ProjectService {
                 p.getProjectIdx(),
                 p.getClient().getClientName(),
                 p.getProjectTitle(),
-                skills
+                skills,
+                p.getTime()
             );
         }).collect(Collectors.toList());
     }
@@ -49,6 +50,7 @@ public class ProjectService {
         .collect(Collectors.toList());
 
         return new ProjectDetailDto(
+            p.getProjectIdx(),
             p.getClient().getClientName(),
             p.getClient().getClientAddress(),
             p.getClient().getClientPhone(),
@@ -56,7 +58,8 @@ public class ProjectService {
             p.getProjectInfo(),
             p.getProjectBudget(),
             p.getProjectPeriod(),
-            skills
+            skills,
+            p.getTime()
         );
     }
     

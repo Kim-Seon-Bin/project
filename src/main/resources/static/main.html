@@ -127,6 +127,7 @@
   <script>
     let currentUserType = null;
     let selectedProjectTitle = '';
+    let selectedProjectId = null;
 
     // 사용자 유형 표시
     fetch('/api/user/info', {
@@ -215,33 +216,33 @@
       });
     });
 
-    // 지원하기 버튼 클릭 시 실행
-    document.addEventListener('DOMContentLoaded', () => {
-      const applyBtn = document.getElementById('apply-button');
-      applyBtn.addEventListener('click', () => {
-        if (currentUserType !== '프리랜서') {
-          alert('프리랜서만 이용 가능합니다.');
-          return;
-        }
-        
-        const titleElement = document.querySelector('#project-detail-content p:nth-child(5)');
-        if (titleElement) {
-          selectedProjectTitle = titleElement.textContent.replace('프로젝트명:', '').trim();
-          document.getElementById('apply-confirm-message').textContent = 
-            `"${selectedProjectTitle}" 프로젝트에 지원하시겠습니까?`;
-          document.getElementById('apply-confirm-modal').style.display = 'block';
-        }
-      });
-    });
-
     function closeApplyConfirmModal() {
       document.getElementById('apply-confirm-modal').style.display = 'none';
     }
 
     function confirmApply() {
-      alert(`"${selectedProjectTitle}" 프로젝트에 지원 완료되었습니다.`);
-      closeApplyConfirmModal();
-      document.getElementById('project-modal').style.display = 'none';
+      fetch('/api/application/apply', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ projectIdx: selectedProjectId })
+      })
+      .then(res => {
+        if (res.ok) {
+          alert(`"${selectedProjectTitle}" 프로젝트에 지원 완료되었습니다.`);
+          closeApplyConfirmModal();
+          document.getElementById('project-modal').style.display = 'none';
+        } else if (res.status === 401) {
+          alert('로그인이 필요합니다.');
+        } else {
+          return res.text().then(text => { throw new Error(text); });
+        }
+      })
+      .catch(error => {
+        console.error('지원 오류:', error);
+        alert('지원 중 오류가 발생했습니다.');
+      });
     }
   </script>
 
