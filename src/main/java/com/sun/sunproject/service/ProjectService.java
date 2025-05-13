@@ -1,5 +1,6 @@
 package com.sun.sunproject.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,10 +12,12 @@ import com.sun.sunproject.entity.ClientEntity;
 import com.sun.sunproject.entity.ProjectEntity;
 import com.sun.sunproject.entity.ProjectSkillEntity;
 import com.sun.sunproject.entity.SkillEntity;
+import com.sun.sunproject.entity.UserEntity;
 import com.sun.sunproject.repository.ClientRepository;
 import com.sun.sunproject.repository.ProjectRepository;
 import com.sun.sunproject.repository.ProjectSkillRepository;
 import com.sun.sunproject.repository.SkillRepository;
+import com.sun.sunproject.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +28,7 @@ public class ProjectService {
     private final ClientRepository clientRepository;
     private final SkillRepository skillRepository;
     private final ProjectSkillRepository projectSkillRepository;
+    private final UserRepository userRepository;
 
     public List<ProjectDto> getAllProjects() {
         return projectRepository.findAll().stream().map(p -> {
@@ -63,13 +67,19 @@ public class ProjectService {
         );
     }
     
-    public void registerProject(ProjectDetailDto dto) {
+    public void registerProject(String userId, ProjectDetailDto dto) {
+        ClientEntity client = clientRepository.findByUserId(userId);
+        
         // 1. 클라이언트 저장 또는 조회
-        ClientEntity client = new ClientEntity();
-        client.setClientName(dto.getClientName());
-        client.setClientAddress(dto.getClientAddress());
-        client.setClientPhone(dto.getClientPhone());
-        client = clientRepository.save(client);
+        if (client == null) {
+            UserEntity user = userRepository.findByUserId(userId);
+            client = new ClientEntity();
+            client.setUser(user);
+            client.setClientName(dto.getClientName());
+            client.setClientAddress(dto.getClientAddress());
+            client.setClientPhone(dto.getClientPhone());
+            client = clientRepository.save(client);
+        }
 
         // 2. 프로젝트 저장
         ProjectEntity project = new ProjectEntity();
@@ -78,6 +88,7 @@ public class ProjectService {
         project.setProjectInfo(dto.getProjectInfo());
         project.setProjectBudget(dto.getProjectBudget());
         project.setProjectPeriod(dto.getProjectPeriod());
+        project.setTime(LocalDateTime.now());
         project = projectRepository.save(project);
 
         // 3. 스킬 매핑

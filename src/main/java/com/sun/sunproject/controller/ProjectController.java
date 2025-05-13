@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sun.sunproject.dto.ProjectDetailDto;
 import com.sun.sunproject.dto.ProjectDto;
+import com.sun.sunproject.entity.UserEntity;
 import com.sun.sunproject.service.ProjectService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -30,7 +32,12 @@ public class ProjectController {
     }
 
     @PostMapping("/api/projects")
-    public void registerProject(@RequestBody ProjectDetailDto dto) {
-        projectService.registerProject(dto);
-    }
+    public void registerProject(@RequestBody ProjectDetailDto dto, HttpSession session) {
+        UserEntity user = (UserEntity) session.getAttribute("user");
+        if (user == null) {
+            throw new RuntimeException("로그인 정보가 없습니다.");
+        }
+        String userId = user.getUserId(); // 세션에서 꺼냄
+        projectService.registerProject(userId, dto);
+        }
 }
