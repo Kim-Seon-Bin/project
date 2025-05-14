@@ -56,7 +56,7 @@
 ## 📌 서비스 흐름도
 
 ## 📌 ER다이어그램
-![image](https://github.com/user-attachments/assets/af7faa24-bcf9-449b-86d7-c4734e08fbf3)
+![image](https://github.com/user-attachments/assets/9561e30c-8cdf-42d3-a74f-4b1fb2170485)
 
 ## 🖥 화면 구성
 ### 메인화면
