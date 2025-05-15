@@ -19,6 +19,7 @@ import lombok.Data;
 public class ProjectApplicationEntity {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name = "APPLICATION_IDX")
     private Long projectApplicationIdx;
 
     @ManyToOne(fetch=FetchType.LAZY)

@@ -6,10 +6,12 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.sun.sunproject.entity.ClientEntity;
 import com.sun.sunproject.entity.ProjectEntity;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<ProjectEntity, Long>{
     @EntityGraph(attributePaths= {"client", "projectSkills", "projectSkills.skill"})
     List<ProjectEntity> findAll();
+    List<ProjectEntity> findByClient(ClientEntity client);
 }

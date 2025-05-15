@@ -1,10 +1,13 @@
 package com.sun.sunproject.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sun.sunproject.dto.MyApplicationDto;
 import com.sun.sunproject.entity.FreelancerEntity;
 import com.sun.sunproject.entity.ProjectApplicationEntity;
 import com.sun.sunproject.entity.ProjectEntity;
@@ -40,5 +43,22 @@ public class ProjectApplicationService {
         application.setTime(LocalDateTime.now());
 
         projectApplicationRepository.save(application);
+    }
+
+    // 마이페이지 프로젝트 조회
+    public List<MyApplicationDto> getApplicationsByUser(UserEntity user) {
+        FreelancerEntity freelancer = freelancerRepository.findByUser_UserIdx(user.getUserIdx());
+        if (freelancer == null) {
+            throw new IllegalStateException("프리랜서 정보 없음: " + user.getUserId());
+        }
+
+        List<ProjectApplicationEntity> applications = projectApplicationRepository.findByFreelancer(freelancer);
+
+        return applications.stream()
+            .map(application -> new MyApplicationDto(
+                application.getProject().getProjectTitle(),
+                application.getTime()
+            ))
+            .collect(Collectors.toList());
     }
 }

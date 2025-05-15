@@ -15,4 +15,5 @@ public interface FreelancerRepository extends JpaRepository<FreelancerEntity, Lo
     List<FreelancerEntity> findAll();
     
     FreelancerEntity findByUser(UserEntity user);
+    FreelancerEntity findByUser_UserIdx(Long userIdx);
 }
