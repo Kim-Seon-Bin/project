@@ -33,6 +33,10 @@ fetch('/api/mypage/applications', {
       const date = new Date(app.appliedDate).toLocaleString('ko-KR');
       card.textContent = `${app.projectTitle} (지원일: ${date})`;
       cardContainer.appendChild(card);
+
+      card.addEventListener('click', () => {
+        showProjectModal(app);
+      });
     });
 
     sectionBox.appendChild(cardContainer);

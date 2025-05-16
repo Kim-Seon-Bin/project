@@ -35,6 +35,10 @@ fetch(`/api/clients/projects?userId=${encodeURIComponent(userId)}`, {
       const date = new Date(proj.createdDate).toLocaleString('ko-KR');
       card.textContent = `${proj.projectTitle} (등록일: ${date})`;
       cardContainer.appendChild(card);
+      
+      card.addEventListener('click', () => {
+        showProjectModal(proj);
+      });
     });
 
     sectionBox.appendChild(cardContainer);
