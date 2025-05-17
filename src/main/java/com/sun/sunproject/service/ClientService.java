@@ -41,6 +41,7 @@ public class ClientService {
 
         return projects.stream()
             .map(project -> new MyProjectDto(
+                project.getProjectIdx(),
                 project.getProjectTitle(),
                 project.getTime()
             ))

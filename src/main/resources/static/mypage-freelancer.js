@@ -35,7 +35,19 @@ fetch('/api/mypage/applications', {
       cardContainer.appendChild(card);
 
       card.addEventListener('click', () => {
-        showProjectModal(app);
+        if (!app.projectId) {
+          console.error('projectId가 제공되지 않았습니다.');
+          return;
+        }
+
+        fetch(`/api/projects/${app.projectId}`)
+          .then(res => res.json())
+          .then(detail => {
+            showProjectModal(detail);
+          })
+          .catch(err => {
+            console.error('프로젝트 상세 정보 불러오기 실패:', err);
+          });
       });
     });
 

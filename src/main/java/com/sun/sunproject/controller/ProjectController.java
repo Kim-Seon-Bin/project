@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sun.sunproject.dto.ProjectDetailDto;
@@ -28,6 +29,9 @@ public class ProjectController {
 
     @GetMapping("/api/projects/{id}")
     public ProjectDetailDto getProjectDetail(@PathVariable Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("프로젝트 ID가 누락되었습니다.");
+        }
         return projectService.getProjectDetail(id);
     }
 
@@ -40,4 +44,9 @@ public class ProjectController {
         String userId = user.getUserId(); // 세션에서 꺼냄
         projectService.registerProject(userId, dto);
         }
+
+    @GetMapping("/api/projects/by-client")
+    public List<ProjectDto> getClientProjects(@RequestParam String userId) {
+        return projectService.getProjectsByUserId(userId);
+    }
 }

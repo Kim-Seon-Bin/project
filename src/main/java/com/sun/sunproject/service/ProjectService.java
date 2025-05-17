@@ -103,4 +103,25 @@ public class ProjectService {
             projectSkillRepository.save(projectSkill); 
         }
     }
+
+    public List<ProjectDto> getProjectsByUserId(String userId) {
+        ClientEntity client = clientRepository.findByUserId(userId);
+        if (client == null) {
+            return List.of();  
+        }
+
+        return client.getProjects().stream().map(p -> {
+            List<String> skills = p.getProjectSkills().stream()
+                .map(ps -> ps.getSkill().getSkillName())
+                .collect(Collectors.toList());
+
+            return new ProjectDto(
+                p.getProjectIdx(),
+                p.getClient().getClientName(),
+                p.getProjectTitle(),
+                skills,
+                p.getTime()
+            );
+        }).collect(Collectors.toList());
+    }
 }

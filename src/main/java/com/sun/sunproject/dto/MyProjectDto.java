@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MyProjectDto {
+    private Long projectIdx;
     private String projectTitle;
     private LocalDateTime createdDate;
 }

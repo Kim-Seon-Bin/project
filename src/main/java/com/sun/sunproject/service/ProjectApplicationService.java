@@ -56,6 +56,7 @@ public class ProjectApplicationService {
 
         return applications.stream()
             .map(application -> new MyApplicationDto(
+                application.getProject().getProjectIdx(),
                 application.getProject().getProjectTitle(),
                 application.getTime()
             ))

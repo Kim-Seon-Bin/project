@@ -3,7 +3,7 @@ package com.sun.sunproject.controller;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sun.sunproject.dto.ClientDto;
@@ -22,8 +22,8 @@ public class ClientController {
         return clientService.getAllClients();
     }
 
-    @GetMapping("/api/clients/projects")
-    public List<MyProjectDto> getClientProjects(@RequestParam String userId) {
+    @GetMapping("/api/clients/{userId}/projects")
+    public List<MyProjectDto> getClientProjects(@PathVariable String userId) {
         return clientService.getRegisteredProjects(userId);
     }
 }
