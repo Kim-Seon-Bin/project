@@ -99,6 +99,14 @@
     border-radius: 8px;
   }
 
+  #apply-check-button {
+    padding: 10px 20px;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
   .close-button {
     float: right;
     font-size: 28px;
@@ -132,6 +140,19 @@
       <div class="modal-content">
         <span class="close-button" onclick="document.getElementById('project-modal').style.display='none'">&times;</span>
         <div id="project-detail-content"></div>
+        <div class="modal-footer">
+          <button id="apply-check-button">지원자 확인</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="applicant-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-button" onclick="document.getElementById('applicant-modal').style.display='none'">&times;</span>
+        <h3>지원자 목록</h3>
+        <div id="applicant-detail-content">
+          <p>지원자 정보가 여기에 표시됩니다.</p>
+        </div>
       </div>
     </div>
 
@@ -142,6 +163,49 @@
     function goToMain() {
       window.location.href = 'main.html';
     }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const checkButton = document.getElementById("apply-check-button");
+      const applicantModal = document.getElementById("applicant-modal");
+      const applicantContent = document.getElementById("applicant-detail-content");
+
+      if (checkButton) {
+        checkButton.addEventListener("click", () => {
+          const projectId = checkButton.dataset.projectId;
+          if (!projectId) {
+            alert("프로젝트 ID가 없습니다.");
+            return;
+          }
+
+          // 지원자 정보 가져오기
+          fetch(`/api/projects/${projectId}/applicants`)
+            .then(res => {
+              if (!res.ok) throw new Error("지원자 정보 불러오기 실패");
+              return res.json();
+            })
+            .then(applicants => {
+              if (applicants.length === 0) {
+                applicantContent.innerHTML = "<p>아직 지원한 프리랜서가 없습니다.</p>";
+              } else {
+                const list = applicants.map(app => `
+                  <div style="margin-bottom: 10px; padding: 10px; background: #f5f5f5; border-radius: 5px;">
+                    <strong>${app.freelancerName}</strong><br/>
+                    소개: ${app.freelancerIntro || '소개 없음'}<br/>
+                    포트폴리오: ${app.freelancerPortfolio || 'N/A'}
+                  </div>
+                `).join('');
+                applicantContent.innerHTML = list;
+              }
+
+              applicantModal.style.display = "block";
+            })
+            .catch(err => {
+              console.error(err);
+              alert("지원자 정보를 불러오는 데 실패했습니다.");
+            });
+        });
+      }
+    });
 
     loadUserInfoAndInitPage();
   </script>

@@ -33,7 +33,6 @@ function initClientMypage(userId) {
       cardContainer.className = 'card-container';
 
       projects.forEach(proj => {
-        console.log('프로젝트 정보:', proj);  
         const card = document.createElement('div');
         card.className = 'card';
         const date = new Date(proj.createdDate).toLocaleString('ko-KR');
@@ -69,3 +68,4 @@ function initClientMypage(userId) {
   container.appendChild(sectionTitle);
   container.appendChild(sectionBox);
 }
+

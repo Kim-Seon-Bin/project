@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sun.sunproject.dto.FreelancerDto;
 import com.sun.sunproject.dto.ProjectDetailDto;
 import com.sun.sunproject.dto.ProjectDto;
 import com.sun.sunproject.entity.UserEntity;
@@ -48,5 +49,10 @@ public class ProjectController {
     @GetMapping("/api/projects/by-client")
     public List<ProjectDto> getClientProjects(@RequestParam String userId) {
         return projectService.getProjectsByUserId(userId);
+    }
+
+    @GetMapping("/api/projects/{projectId}/applicants")
+    public List<FreelancerDto> getApplicantsByProject(@PathVariable Long projectId) {
+        return projectService.getApplicantsByProject(projectId);
     }
 }

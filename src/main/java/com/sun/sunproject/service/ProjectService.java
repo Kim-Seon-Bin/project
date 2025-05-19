@@ -6,14 +6,18 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.sun.sunproject.dto.FreelancerDto;
 import com.sun.sunproject.dto.ProjectDetailDto;
 import com.sun.sunproject.dto.ProjectDto;
 import com.sun.sunproject.entity.ClientEntity;
+import com.sun.sunproject.entity.FreelancerEntity;
+import com.sun.sunproject.entity.ProjectApplicationEntity;
 import com.sun.sunproject.entity.ProjectEntity;
 import com.sun.sunproject.entity.ProjectSkillEntity;
 import com.sun.sunproject.entity.SkillEntity;
 import com.sun.sunproject.entity.UserEntity;
 import com.sun.sunproject.repository.ClientRepository;
+import com.sun.sunproject.repository.ProjectApplicationRepository;
 import com.sun.sunproject.repository.ProjectRepository;
 import com.sun.sunproject.repository.ProjectSkillRepository;
 import com.sun.sunproject.repository.SkillRepository;
@@ -29,6 +33,7 @@ public class ProjectService {
     private final SkillRepository skillRepository;
     private final ProjectSkillRepository projectSkillRepository;
     private final UserRepository userRepository;
+    private final ProjectApplicationRepository projectApplicationRepository;
 
     public List<ProjectDto> getAllProjects() {
         return projectRepository.findAll().stream().map(p -> {
@@ -123,5 +128,25 @@ public class ProjectService {
                 p.getTime()
             );
         }).collect(Collectors.toList());
+    }
+
+    public List<FreelancerDto> getApplicantsByProject(Long projectId) {
+        ProjectEntity project = projectRepository.findById(projectId)
+            .orElseThrow(() -> new IllegalArgumentException("해당 프로젝트가 없습니다."));
+
+        List<ProjectApplicationEntity> applications = projectApplicationRepository.findByProject(project);
+
+        return applications.stream()
+            .map(app -> {
+                FreelancerEntity freelancer = app.getFreelancer();
+                FreelancerDto dto = new FreelancerDto();
+                dto.setFreelancerName(freelancer.getFreelancerName());
+                dto.setFreelancerIntro(freelancer.getFreelancerIntro());
+                dto.setFreelancerPortfolio(freelancer.getFreelancerPortfolio());
+                // 필요하다면 스킬 리스트도 셋팅
+                // 예) dto.setFreelancerSkills(...);
+                return dto;
+            })
+            .collect(Collectors.toList());
     }
 }

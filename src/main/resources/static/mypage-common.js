@@ -35,6 +35,7 @@ function importClientScript(userId) {
 
 function showProjectModal(detail) {
   console.log('프로젝트 상세 응답:', detail);
+
   const content = `
     <h3>프로젝트 상세 정보</h3>
     <p><strong>클라이언트:</strong> ${detail.clientName || ''}</p> 
@@ -47,7 +48,19 @@ function showProjectModal(detail) {
     <p><strong>필요 스킬:</strong> ${(detail.requiredSkills || []).join(', ')}</p>
     <p><strong>등록 날짜:</strong> ${detail.time.replace('T', ' ').substring(0, 16)}</p>
   `;
+
   document.getElementById('project-detail-content').innerHTML = content;
+  document.getElementById('project-modal').style.display = 'block';
+
+  const applyBtn = document.getElementById('apply-check-button');
+  applyBtn.dataset.projectId = detail.projectIdx;
+
+  if (document.getElementById('user-type').textContent === '클라이언트') {
+    applyBtn.style.display = 'inline-block';
+  } else {
+    applyBtn.style.display = 'none';
+  }
+
   document.getElementById('project-modal').style.display = 'block';
 
   window.onclick = function(event) {
