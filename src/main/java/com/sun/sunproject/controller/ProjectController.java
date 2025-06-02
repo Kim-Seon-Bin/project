@@ -42,7 +42,7 @@ public class ProjectController {
         if (user == null) {
             throw new RuntimeException("로그인 정보가 없습니다.");
         }
-        String userId = user.getUserId(); // 세션에서 꺼냄
+        String userId = user.getUserId();
         projectService.registerProject(userId, dto);
         }
 

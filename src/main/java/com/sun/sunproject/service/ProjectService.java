@@ -143,7 +143,6 @@ public class ProjectService {
                 dto.setFreelancerName(freelancer.getFreelancerName());
                 dto.setFreelancerIntro(freelancer.getFreelancerIntro());
                 dto.setFreelancerPortfolio(freelancer.getFreelancerPortfolio());
-                // 필요하다면 스킬 리스트도 셋팅
                 // 예) dto.setFreelancerSkills(...);
                 return dto;
             })
